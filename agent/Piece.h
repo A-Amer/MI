@@ -2,8 +2,10 @@
 #define PIECE_H
 #include "Move.h"
 #include "Board.h"
-#include <list> 
+#include <bits/stdc++.h>
 using namespace std;
+
+
 
 class Piece {
 public:
@@ -13,6 +15,8 @@ public:
     Piece(const Piece& orig);
     virtual ~Piece();
     virtual void ValidMovesGenerator(int currentPos, Board * board, list <Move*> &generatedM)= 0;
+    virtual string GetType()=0;
+    
 
     
 private:

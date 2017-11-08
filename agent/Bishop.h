@@ -2,6 +2,7 @@
 #ifndef BISHOP_H
 #define BISHOP_H
 #include "Piece.h"
+using namespace std;
 
 class Bishop : public Piece  {
 public:
@@ -10,6 +11,7 @@ public:
     Bishop(const Bishop& orig);
     virtual ~Bishop();
     void ValidMovesGenerator(int currentPos, Board * board, list <Move*> &generatedM);
+    string GetType(){return "bishop"; }
 private:
 
 };

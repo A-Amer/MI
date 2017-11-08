@@ -35,8 +35,7 @@ void Knight::ValidMovesGenerator(int currentPos, Board * board, list <Move*> &ge
 
     unsigned long long m;
     int index;
-    currentPos = current.rank*8+current.file;
-    int j=0;
+
     while (newMask!=0)
     {
         index = floor(log2(newMask));
@@ -50,8 +49,7 @@ void Knight::ValidMovesGenerator(int currentPos, Board * board, list <Move*> &ge
             m=1<<index;
         //m = pow(2,index);
         newMask = newMask & ~m;
-        generatedM.push_back(new Move(currentPos , index));
-        j++;
+        generatedM.push_back(new Move(currentPos , (index/8)*16+(index%8)));
     }
     return ;
 }

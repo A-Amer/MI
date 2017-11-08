@@ -10,6 +10,7 @@ public:
     Knight (){};
     Knight(const Knight& orig);
     virtual ~Knight();
+    string GetType(){return "knight";}
     void ValidMovesGenerator(int currentPos, Board * board, list <Move*> &generatedM);
 
 private:

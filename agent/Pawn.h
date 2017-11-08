@@ -8,6 +8,7 @@ public:
     Pawn(){};
     Pawn(const Pawn& orig);
     virtual ~Pawn();
+    string GetType(){return "pawn";}
     void ValidMovesGenerator(int currentPos, Board * board, list <Move*> &generatedM);
 private:
 

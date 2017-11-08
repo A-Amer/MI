@@ -11,6 +11,7 @@ public:
     Queen(){};
     Queen(const Queen& orig);
     virtual ~Queen();
+    string GetType(){return "queen";}
     void ValidMovesGenerator(int currentPos, Board * board, list <Move*> &generatedM);
 private:
 

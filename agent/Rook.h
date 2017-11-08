@@ -8,6 +8,7 @@ public:
     Rook(){};
     Rook(const Rook& orig);
     virtual ~Rook();
+    string GetType(){return "rook";}
     void ValidMovesGenerator(int currentPos, Board * board, list <Move*> &generatedM);
 private:
     

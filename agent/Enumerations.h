@@ -18,6 +18,7 @@ enum PieceType {
         BlackPieces
 };
 
+
 enum Color {
         
         White,
