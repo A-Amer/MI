@@ -9,6 +9,18 @@ public:
     Pawn(const Pawn& orig);
     virtual ~Pawn();
     string GetType(){return "pawn";}
+    PieceType GetPieceType()
+    {
+        if(this->color==White)
+            return WhitePawns;
+        return BlackPawns;
+    };
+    char drawchar()
+    {
+        if(this->color==White)
+            return 'P';
+        return 'p';
+    }
     void ValidMovesGenerator(int currentPos, Board * board, list <Move*> &generatedM);
 private:
 

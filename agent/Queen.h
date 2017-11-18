@@ -12,6 +12,18 @@ public:
     Queen(const Queen& orig);
     virtual ~Queen();
     string GetType(){return "queen";}
+    PieceType GetPieceType()
+    {
+        if(this->color==White)
+            return WhiteQueen;
+        return BlackQueen;
+    };
+    char drawchar()
+    {
+        if(this->color==White)
+            return 'Q';
+        return 'q';
+    }
     void ValidMovesGenerator(int currentPos, Board * board, list <Move*> &generatedM);
 private:
 

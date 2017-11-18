@@ -15,7 +15,8 @@ enum PieceType {
         BlackKnights,
         BlackPawns,
         WhitePieces,
-        BlackPieces
+        BlackPieces,
+        NoPiece = -1
 };
 
 
@@ -26,14 +27,14 @@ enum Color {
 };
 
 enum File {
-        A = 0,
-        B = 1,
-        C = 2,
-        D = 3,
-        E = 4,
-        F = 5,
-        G = 6,
-        H = 7,
+        a = 0,
+        b = 1,
+        c = 2,
+        d = 3,
+        e = 4,
+        f = 5,
+        g = 6,
+        h = 7,
         None = -1
 };
     const unsigned long long FILE_A=

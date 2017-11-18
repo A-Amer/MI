@@ -16,6 +16,8 @@ public:
     virtual ~Piece();
     virtual void ValidMovesGenerator(int currentPos, Board * board, list <Move*> &generatedM)= 0;
     virtual string GetType()=0;
+    virtual PieceType GetPieceType()=0;
+    virtual char drawchar()=0;
     
 
     

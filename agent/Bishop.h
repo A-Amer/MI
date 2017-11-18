@@ -11,7 +11,19 @@ public:
     Bishop(const Bishop& orig);
     virtual ~Bishop();
     void ValidMovesGenerator(int currentPos, Board * board, list <Move*> &generatedM);
-    string GetType(){return "bishop"; }
+    string GetType(){return "bishop"; };
+    PieceType GetPieceType()
+    {
+        if(this->color==White)
+            return WhiteBishops;
+        return BlackBishops;
+    };
+    char drawchar()
+    {
+        if(this->color==White)
+            return 'B';
+        return 'b';
+    }
 private:
 
 };

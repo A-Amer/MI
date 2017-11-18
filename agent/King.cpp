@@ -14,21 +14,6 @@ King::~King() {
 
 void draw(unsigned long long d);
 
-unsigned long long ToBitBoardConverter(int r,File f)//r:0 -> 7 , f:A -> H
-{
-    int fi=f;
-    int index = r*8+f;
-    unsigned long long m;
-    if (index >30)
-    {
-        m=(1L<<30);
-        m=m<<index-30;
-    }
-    else
-        m=1<<index;
-    return m;
-}
-
 void King::ValidMovesGenerator(int currentPos, Board * board, list <Move*> &generatedM)// takes index of 0x88 
 {
 
