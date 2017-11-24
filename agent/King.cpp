@@ -73,12 +73,12 @@ bool King::QSCastlingMove(int f, int r, Board* board)
 
     if(this->EmptyCastleMask[this->color]&(board->bitBoards[WhitePieces]|board->bitBoards[BlackPieces]))
     {
-        cout<<"\n\nNo Queen Side Castling for "<<this->color<<"\n\n";
+        //cout<<"\n\nNo Queen Side Castling for "<<this->color<<"\n\n";
         return false;
     }
     if (!BRQCastling(f, r, board,1, "rook"))
     {
-        cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Rook or Queen in the way horizontally \n\n";
+        //cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Rook or Queen in the way horizontally \n\n";
         return false;
     }
     
@@ -86,32 +86,32 @@ bool King::QSCastlingMove(int f, int r, Board* board)
     {
         if((KnightCasleMask[this->color]>>i)&board->bitBoards[WhiteKnights+enumdiff[this->color]])
         {
-            cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Knight in the way-> "<<i<<" \n\n";
+            //cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Knight in the way-> "<<i<<" \n\n";
             return false;
         }
         if((PawnCastleMask[this->color]>>i)&board->bitBoards[WhitePawns+enumdiff[this->color]])
         {
-            cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Pawn in the way-> "<<i<<"\n\n";
+            //cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Pawn in the way-> "<<i<<"\n\n";
             return false;
         }
         if((KingCastleMask[this->color]>>i)&board->bitBoards[WhiteKing+enumdiff[this->color]])
         {
-            cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : King in the way-> "<<i<<"\n\n";
+            //cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : King in the way-> "<<i<<"\n\n";
             return false;
         }
         if(!BRQCastling(f, r, board,16*direction[this->color], "rook"))
         {
-        cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Rook or Queen in the way vertically-> "<<i<<"\n\n";
+            //cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Rook or Queen in the way vertically-> "<<i<<"\n\n";
         return false;
     }
         if(!BRQCastling(f, r, board,15*direction[this->color], "bishop"))
         {
-            cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Bishop or Queen in the way top right-> "<<i<<"\n\n";
+            //cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Bishop or Queen in the way top right-> "<<i<<"\n\n";
             return false;
         }
         if(!BRQCastling(f, r, board,17*direction[this->color], "bishop"))
         {
-            cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Rook or Queen in the way top left-> "<<i<<"\n\n";
+            //cout<<"\n\nNo Queen Side Castling for "<<this->color<<" : Rook or Queen in the way top left-> "<<i<<"\n\n";
             return false;
         }
         f--;
@@ -125,12 +125,12 @@ bool King::KSCastlingMove(int f, int r, Board * board)
     
     if(this->EmptyCastleMask[this->color+2]&(board->bitBoards[WhitePieces]|board->bitBoards[BlackPieces]))
     {
-        cout<<"\n\nNo King Side Castling for "<<this->color<<"\n\n";
+        //cout<<"\n\nNo King Side Castling for "<<this->color<<"\n\n";
         return false;
     }
     if (!BRQCastling(f, r, board,-1, "rook"))
     {
-        cout<<"\n\nNo King Side Castling for "<<this->color<<" : Rook or Queen in the way horizontally \n\n";
+        //cout<<"\n\nNo King Side Castling for "<<this->color<<" : Rook or Queen in the way horizontally \n\n";
         return false;
     }
     
@@ -138,32 +138,32 @@ bool King::KSCastlingMove(int f, int r, Board * board)
     {
         if((KnightCasleMask[this->color]<<i)&board->bitBoards[WhiteKnights+enumdiff[this->color]])
         {
-            cout<<"\n\nNo King Side Castling for "<<this->color<<" : Knight in the way-> "<<i<<" \n\n";
+            //cout<<"\n\nNo King Side Castling for "<<this->color<<" : Knight in the way-> "<<i<<" \n\n";
             return false;
         }
         if((PawnCastleMask[this->color]<<i)&board->bitBoards[WhitePawns+enumdiff[this->color]])
         {
-            cout<<"\n\nNo King Side Castling for "<<this->color<<" : Pawn in the way-> "<<i<<"\n\n";
+            //cout<<"\n\nNo King Side Castling for "<<this->color<<" : Pawn in the way-> "<<i<<"\n\n";
             return false;
         }
         if((KingCastleMask[this->color]<<i)&board->bitBoards[WhiteKing+enumdiff[this->color]])
         {
-            cout<<"\n\nNo King Side Castling for "<<this->color<<" : King in the way-> "<<i<<"\n\n";
+            //cout<<"\n\nNo King Side Castling for "<<this->color<<" : King in the way-> "<<i<<"\n\n";
             return false;
         }
         if(!BRQCastling(f, r, board,16*direction[this->color], "rook"))
         {
-        cout<<"\n\nNo King Side Castling for "<<this->color<<" : Rook or Queen in the way vertically-> "<<i<<"\n\n";
+        //cout<<"\n\nNo King Side Castling for "<<this->color<<" : Rook or Queen in the way vertically-> "<<i<<"\n\n";
         return false;
     }
         if(!BRQCastling(f, r, board,15*direction[this->color], "bishop"))
         {
-            cout<<"\n\nNo King Side Castling for "<<this->color<<" : Bishop or Queen in the way top right-> "<<i<<"\n\n";
+            //cout<<"\n\nNo King Side Castling for "<<this->color<<" : Bishop or Queen in the way top right-> "<<i<<"\n\n";
             return false;
         }
         if(!BRQCastling(f, r, board,17*direction[this->color], "bishop"))
         {
-            cout<<"\n\nNo King Side Castling for "<<this->color<<" : Rook or Queen in the way top left-> "<<i<<"\n\n";
+            //cout<<"\n\nNo King Side Castling for "<<this->color<<" : Rook or Queen in the way top left-> "<<i<<"\n\n";
             return false;
         }
         f++;

@@ -29,6 +29,7 @@ public:
  
     bool castleKSide[2];
     bool castleQSide[2];
+    Color owner;
     Color turn;
     Position * enPassent;
     /* -------------- Chess Pieces Declaration --------------*/
@@ -47,7 +48,7 @@ public:
     void SetCastlingRights(string s, string turn, string enPassentTS, map <char,File> lookupF,map <char,int> lookupR);
     void MovesGenerator(list<Move*> &generatedM);
     void ApplyMove(Move * m,char promotion);
-    double heuristic();
+    double heuristic(bool &whiteKing, bool &blackKing);
     Board();
     Board(const Board& orig);
     virtual ~Board();

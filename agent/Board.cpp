@@ -92,7 +92,7 @@ Board::Board(const Board& orig) {
     {
         while(!(i & 0x88))
         {
-            if(board0x88[i]!=0)
+            if(orig.board0x88[i]!=0)
             {
                 type=orig.board0x88[i]->GetPieceType();
                 switch(type){
@@ -127,7 +127,7 @@ Board::Board(const Board& orig) {
                         this->board0x88[i]=this->BlackKingObj;
                         break;
                     case WhitePawns:  
-                        this->board0x88[i]=this->BlackPawnObj;
+                        this->board0x88[i]=this->WhitePawnObj;
                         break;
                     case BlackPawns:
                         this->board0x88[i]=this->BlackPawnObj;
@@ -212,7 +212,7 @@ void Board::ApplyMove(Move * m, char promotion)
         int rookbb [2] = {WhiteRooks,BlackRooks};
         if (((m->NextPos%16) - (m->CurrPos%16))>1)
         {
-            cout<<"\nking is castling king side";
+            //cout<<"\nking is castling king side\n";
             board0x88[m->NextPos-1]=board0x88[m->CurrPos+3];
             board0x88[m->CurrPos+3]=0;
             bitBoards[rookbb[turn]]=
@@ -222,7 +222,7 @@ void Board::ApplyMove(Move * m, char promotion)
         }
         else if (((m->CurrPos%16)-(m->NextPos%16))>1)
         {
-            cout<<"\nking is castling queen side";
+            //cout<<"\nking is castling queen side\n";
             board0x88[m->NextPos+1]=board0x88[m->CurrPos-4];
             board0x88[m->CurrPos-4]=0;
             bitBoards[rookbb[turn]]=
@@ -249,30 +249,30 @@ void Board::ApplyMove(Move * m, char promotion)
         }
         else if(m->NextPos/16==promRank[turn])
         {
-            switch(promotion){
-                case'Q':
-                    board0x88[m->NextPos]=this->WhiteQueenObj;                  
-                    break;
+            switch(promotion){               
                 case 'q':
-                    board0x88[m->NextPos]=this->BlackQueenObj;
-                    break;
-                case 'N':
-                    board0x88[m->NextPos]=this->WhiteKnightObj;
+                    if(this->turn==White)
+                        board0x88[m->NextPos]=this->WhiteQueenObj;  
+                    else
+                        board0x88[m->NextPos]=this->BlackQueenObj;
                     break;
                 case 'n':
-                    board0x88[m->NextPos]=this->BlackKnightObj;
-                    break;
-                case 'R':
-                    board0x88[m->NextPos]=this->WhiteRookObj;
+                    if(this->turn==White)
+                        board0x88[m->NextPos]=this->WhiteKnightObj;
+                    else
+                        board0x88[m->NextPos]=this->BlackKnightObj;
                     break;
                 case 'r':
-                    board0x88[m->NextPos]=this->BlackRookObj;
-                    break;
-                case 'B':
-                    board0x88[m->NextPos]=this->WhiteBishopObj;
+                    if(this->turn==White)
+                        board0x88[m->NextPos]=this->WhiteRookObj;
+                    else
+                        board0x88[m->NextPos]=this->BlackRookObj;
                     break;
                 case 'b':
-                    board0x88[m->NextPos]=this->BlackBishopObj;
+                    if(this->turn==White)
+                        board0x88[m->NextPos]=this->WhiteBishopObj;
+                    else
+                        board0x88[m->NextPos]=this->BlackBishopObj;
                     break;                   
             }
             bitBoards[board0x88[m->NextPos]->GetPieceType()] 
@@ -321,7 +321,7 @@ void Board::ApplyMove(Move * m, char promotion)
     turn=static_cast<Color>(1-turn);
 }
 
-double Board::heuristic(){
+double Board::heuristic(bool &whiteKing, bool &blackKing){
 	int pw = 0;
 	int nw = 0; 
 	int bw = 0;
@@ -334,63 +334,65 @@ double Board::heuristic(){
 	int rb = 0;
 	int qb = 0;
 	int kb = 0;
+        blackKing=false;
+        whiteKing=false;
 
 	for (int i = 0; i < 128; i++){
-		if (dynamic_cast<King*>(board0x88[i]) != nullptr && board0x88[i]->color == 1){
+		if (dynamic_cast<King*>(board0x88[i]) != nullptr && board0x88[i]->color == White){
 			//cout << "Found White King\n";
-			kw++;
+                    whiteKing=true;
+                    kw++;
 		}
-		else if (dynamic_cast<Queen*>(board0x88[i]) != nullptr && board0x88[i]->color == 1){
+		else if (dynamic_cast<Queen*>(board0x88[i]) != nullptr && board0x88[i]->color == White){
 			//cout << "Found White Queen\n";
 			qw++;
 		}
-		else if (dynamic_cast<Rook*>(board0x88[i]) != nullptr && board0x88[i]->color == 1){
+		else if (dynamic_cast<Rook*>(board0x88[i]) != nullptr && board0x88[i]->color == White){
 			//cout << "Found White Rook\n";
 			rw++;
 		}
-		else if (dynamic_cast<Bishop*>(board0x88[i]) != nullptr && board0x88[i]->color == 1){
+		else if (dynamic_cast<Bishop*>(board0x88[i]) != nullptr && board0x88[i]->color == White){
 			//cout << "Found White Bishop\n";
 			bw++;
 		}
-		else if (dynamic_cast<Knight*>(board0x88[i]) != nullptr && board0x88[i]->color == 1){
+		else if (dynamic_cast<Knight*>(board0x88[i]) != nullptr && board0x88[i]->color == White){
 			//cout << "Found White Knight\n";
 			nw++;
 		}
-		else if (dynamic_cast<Pawn*>(board0x88[i]) != nullptr && board0x88[i]->color == 1){
+		else if (dynamic_cast<Pawn*>(board0x88[i]) != nullptr && board0x88[i]->color == White){
 			//cout << "Found White Pawn\n";
 			pw++;
 		}
-		else if (dynamic_cast<King*>(board0x88[i]) != nullptr && board0x88[i]->color == 0){
+		else if (dynamic_cast<King*>(board0x88[i]) != nullptr && board0x88[i]->color == Black){
 			//cout << "Found Black King\n";
-			kb++;
+                    blackKing=true;
+                    kb++;
 		}
-		else if (dynamic_cast<Queen*>(board0x88[i]) != nullptr && board0x88[i]->color == 0){
+		else if (dynamic_cast<Queen*>(board0x88[i]) != nullptr && board0x88[i]->color == Black){
 			//cout << "Found Black Queen\n";
 			qb++;
 		}
-		else if (dynamic_cast<Rook*>(board0x88[i]) != nullptr && board0x88[i]->color == 0){
+		else if (dynamic_cast<Rook*>(board0x88[i]) != nullptr && board0x88[i]->color == Black){
 			//cout << "Found Black Rook\n";
 			rb++;
 		}
-		else if (dynamic_cast<Bishop*>(board0x88[i]) != nullptr && board0x88[i]->color == 0){
+		else if (dynamic_cast<Bishop*>(board0x88[i]) != nullptr && board0x88[i]->color == Black){
 			//cout << "Found Black Bishop\n";
 			bb++;
 		}
-		else if (dynamic_cast<Knight*>(board0x88[i]) != nullptr && board0x88[i]->color == 0){
+		else if (dynamic_cast<Knight*>(board0x88[i]) != nullptr && board0x88[i]->color == Black){
 			//cout << "Found Black Knight\n";
 			nb++;
 		}
-		else if (dynamic_cast<Pawn*>(board0x88[i]) != nullptr && board0x88[i]->color == 0){
+		else if (dynamic_cast<Pawn*>(board0x88[i]) != nullptr && board0x88[i]->color == Black){
 			//cout << "Found Black Pawn\n";
 			pb++;
 		}
 	}
-		
+   
 		double heu = 200 * 10000 * (kw - kb) + 9 * 1000 * (qw - qb) + 5 * 525 * (rw - rb) 
                     + 3 * 350 * (nw - nb + bw - bb) + 100 * (pw - pb);
-                cout << heu << endl ;
-                if(1-this->turn == Black)
-                    heu = heu*-1;
-		cout << heu << endl ;	//Check The Function
+
+		//cout << heu << endl ;	//Check The Function
 		return heu;
 }

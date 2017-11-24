@@ -10,7 +10,15 @@
 #include <string> 
 
 using namespace std;
+
 void draw(unsigned long long d);
+void drawBoard(Board * b);
+int negamax(Board * boardRep, int depth, int color);
+struct Result {
+	int value;
+	Move move;
+};
+
 class Chess {
 	public:
         Board * boardRep;
@@ -264,7 +272,7 @@ class Chess {
             Move *temp;
             while(it != generatedM.end())
             {
-                 temp = (*it); 
+                temp = (*it); 
                 cout<<"r:"<<temp->CurrPos/16<<" f: "<<temp->CurrPos%16<<"    ,   r:"<<temp->NextPos/16<<" f: "<<temp->NextPos%16<<"\n";
                 it++;
             }
@@ -311,33 +319,151 @@ void drawBoard (Board * b)//used in testing
     }
 }
 
-int main() {
-	Chess* Game = new Chess();
-	string FEN = "r111k11r/7p/8/6P1/1Pp5/8/R111111p/R11QKP11 b KQq b3 0 1";//change FEN
+double negamax(Board * origBoard, int depth,int rootdepth, int color, Move & bestMove)
+{
+        bool WhiteKing,BlackKing;
+        double heu = origBoard->heuristic(WhiteKing,BlackKing);
+	if (depth == 0 || !WhiteKing || !BlackKing)
+	{
+            
+//            if(!WhiteKing&&origBoard->owner==White)
+//                return -INT_MAX;
+//            if(!WhiteKing&&origBoard->owner==Black)
+//                return INT_MAX;
+//            if(!BlackKing&&origBoard->owner==Black)
+//                return -INT_MAX;
+//            if(!BlackKing&&origBoard->owner==White)
+//                return INT_MAX;
+            return color * heu;
+	}
+
+	double bestValue = -INT_MAX;								//If this constant causes an overflow error where the value returns to 0 again just replace it with 999999999
+	double value = 0;
+	Board * newBoard;
+	list <Move*> generatedM;
+	origBoard->MovesGenerator(generatedM);
+	list <Move *> ::iterator  it = generatedM.begin();
+        Move  tempmove;
+	while (it != generatedM.end())
+	{
+           
+		newBoard = new Board(*origBoard);//Save the original state
+                
+                newBoard->ApplyMove(*it,'q');
+                
+                //drawBoard(newBoard);
+		
+		value = -negamax(newBoard, depth - 1,rootdepth, -color, bestMove);//Recursive call on the new state
+		//cout<<"\nvalue: "<<value<<"\n";
+		if (value > bestValue)
+		{
+			bestValue = value;
+                        tempmove =*(*it);
+                        if(depth==rootdepth)
+                        {
+                            bestMove = *(*it);
+                            
+                        }
+		}
+
+		newBoard->~Board();//Destroy current state
+		it++;
+	}
+
+	return bestValue;
+}
+
+//void search(Color c)
+//{
+//    int tempTurn,depth=3;
+//    if(c==Black)
+//        tempTurn=-1;
+//    else
+//        tempTurn = 1;
+//            Move bestMove;
+//            double bestValue;
+//            for (int i = 0; i <= depth; i++)			//IDS
+//            {         
+//                    bestValue = negamax(Game->boardRep, i, i, tempturn, bestMove);
+//                    //The second to last parameter is the current turn (White = 1 and Black = -1)
+//                    //cout<<"\n-----------------next iteration------------------\n";
+//            }
+//}
+
+void testAgent()
+{
+    Chess* Game = new Chess();
+	int depth = 5;		//Set the depth for the IDS
+	string FEN ="r111k11r/7p/8/6P1/1Pp5/8/R111P11p/R11QK111 b Qkq b3 0 1";//change FEN
 	Game->parseFEN(FEN);
 	vector<string> board = Game->FenToBoard(Game->board);
 	Game->boardRep->board0x88 = Game->BoardTo0x88(board);
 	Game->boardRep->bitBoards = Game->BoardToBitboards(board);
-        Game->TestMoveGenerator();
         Move * move = new Move();
-        int r1,f1,r2,f2;
-        char p;
-        cout<<"\nenter selected move (a value from 0 to 7) :\n";
-        cin >> r1;
-        while(r1>=0)//this is a trial for applying and generating moves , enter -1 to stop
-        {             
-            cin >> f1 >> r2 >> f2;
-            cin >> p;   // p is the type you want the pawn to be promoted to in case of promotion
-            //enter Q:white queen, q:black queen, N: white knight, n:black knight,
-            //R:white rook, r:black rook, B:white bishop, b:black bishop 
-            //or any other character if the move doesn't lead to a promotion
+	//Game->TestMoveGenerator();	
+	int r1, f1, r2, f2,con;	
+        Move bestMove;
+        double bestValue;	
+        cout<<"\nDo you wish to continue: ";
+        cin >> con;
+        while(con>=0)// enter -1 to stop
+        {                                       
+            for (int i = 0; i <= depth; i++)//IDS
+            {         
+                bestValue = negamax(Game->boardRep, i, i, 1, bestMove);
+                //cout<<"\n-----------------iteration "<<i<<" ------------------\n";
+            }
+            cout<<"\nthe best move is: "<<bestMove.CurrPos/16<<","<<bestMove.CurrPos%16
+                    <<"--> "<<bestMove.NextPos/16<<","<<bestMove.NextPos%16<<"\n";
+            cout<<"\nenter selected move (a value from 0 to 7) :\n";
+            cin >>r1 >> f1 >> r2 >> f2;
             move->CurrPos = r1*16+f1;
             move->NextPos = r2*16+f2;
-            Game->boardRep->ApplyMove(move,p);
+                Game->boardRep->ApplyMove(move,'q');
+                drawBoard(Game->boardRep);
+            cout<<"\nDo you wish to continue: ";
+            cin >> con;
+                
+        }
+}
+void tempmain()
+{
+	Chess* Game = new Chess();
+	int depth = 4;		//Set the depth for the IDS
+string FEN = "r111k11r/7p/8/6P1/1Pp5/8/R111P11p/R11QK111 w Qkq b3 0 1";//change FEN
+	Game->parseFEN(FEN);
+	vector<string> board = Game->FenToBoard(Game->board);
+	Game->boardRep->board0x88 = Game->BoardTo0x88(board);
+	Game->boardRep->bitBoards = Game->BoardToBitboards(board);
+        Move * move = new Move();
+		
+	int r1,tempturn;		
+        char p;
+        
+        cin >> r1;
+        while(r1>=0)//enter -1 to stop
+        {             
+            if(Game->boardRep->turn==Black)
+                tempturn=-1;
+            else
+                tempturn = 1;
+            Move bestMove;
+            double bestValue;
+            for (int i = 0; i <= depth; i++)			//IDS
+            {         
+                    bestValue = negamax(Game->boardRep, i, i, tempturn, bestMove);
+                    //The second to last parameter is the current turn (White = 1 and Black = -1)
+                    //cout<<"\n-----------------next iteration------------------\n";
+            }
+            move = &bestMove;
+            Game->boardRep->ApplyMove(move,'q');
             drawBoard(Game->boardRep);
-            Game->TestMoveGenerator();
-            Game->boardRep->heuristic();
-            cout<<"\nenter selected move (a value from 0 to 7) :\n";
             cin >> r1;
         }
+}
+
+int main() 
+{
+    //testAgent();
+    tempmain();
 }

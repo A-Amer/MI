@@ -32,7 +32,7 @@ void Knight::ValidMovesGenerator(int currentPos, Board * board, list <Move*> &ge
         newMask= (newMask << (-shift*8));
 
     newMask = newMask & ~ board->bitBoards[this->color+12];
-
+    //draw(newMask);
     unsigned long long m;
     int index;
 
