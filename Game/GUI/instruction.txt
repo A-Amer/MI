@@ -1,0 +1,2 @@
+Change the directory of the the exe file (built in the speech project)
+Change the IP address of the server and agent
