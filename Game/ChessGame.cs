@@ -15,6 +15,7 @@ namespace ChessDotNet
         Dictionary<string,int> fenCountMap = new Dictionary<string, int>();   //Dictionary that holds the fen occurences
         string _drawReason = null;
         Player _resigned = Player.None;
+        public string enp = "-1";
 
         public bool DrawClaimed
         {
@@ -711,6 +712,7 @@ namespace ChessDotNet
             Piece capturedPiece = GetPieceAt(move.NewPosition.File, move.NewPosition.Rank);
             captured = capturedPiece;
             Piece newPiece = movingPiece;
+            enp = "-1";
             bool isCapture = capturedPiece != null;
             CastlingType castle = CastlingType.None;
             if (movingPiece is Pawn)
@@ -721,6 +723,7 @@ namespace ChessDotNet
                 { // en passant
                     isCapture = true;
                     captured = GetPieceAt(move.NewPosition.File, move.OriginalPosition.Rank);
+                    enp = move.NewPosition.File.ToString().ToLower() + move.OriginalPosition.Rank.ToString();
                     SetPieceAt(move.NewPosition.File, move.OriginalPosition.Rank, null);
                 }
                 if (move.NewPosition.Rank == (move.Player == Player.White ? 8 : 1))
