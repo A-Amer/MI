@@ -4,16 +4,17 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using ChessDotNet.Pieces;
 using System.Text;
-using MI_Speech;
 
 namespace ChessDotNet
 {
     public class ChessGame
     {
         bool _drawn = false;
+        public bool DrawByRepitition = false;       //bool indicator for three repitition rule
+        List<string> fenPositions;
+        Dictionary<string,int> fenCountMap = new Dictionary<string, int>();   //Dictionary that holds the fen occurences
         string _drawReason = null;
         Player _resigned = Player.None;
-        
 
         public bool DrawClaimed
         {
@@ -23,8 +24,6 @@ namespace ChessDotNet
             }
         }
 
-         
-        speechPromotion sp = new speechPromotion();
         public string DrawReason
         {
             get
@@ -290,6 +289,7 @@ namespace ChessDotNet
         public ChessGame(string fen)
         {
             GameCreationData data = FenStringToGameCreationData(fen);
+            fenPositions = new List<string>();
             UseGameCreationData(data);
         }
 
@@ -731,7 +731,8 @@ namespace ChessDotNet
                     if (move.Promotion == null)
                     {
                         string promote;
-                        promote=sp.newPromotion();
+                        Console.Write("enter promotion type:");
+                        promote = Console.ReadLine();
                         switch (promote)
                         {
                             case "queen":
@@ -992,10 +993,11 @@ namespace ChessDotNet
 
         public virtual bool IsDraw()
         {
-            return DrawClaimed || IsStalemated(Player.White) || IsStalemated(Player.Black);
+            return  DrawByRepitition || DrawClaimed || IsStalemated(Player.White) || IsStalemated(Player.Black);
         }
         public virtual bool IsGameOver()
         {
+            DrawByRepitition = threeRepititionCheck();
             return IsDraw() || IsCheckmated(Player.Black) || IsCheckmated(Player.White);
 
             }
@@ -1034,6 +1036,45 @@ namespace ChessDotNet
         public void Resign(Player player)
         {
             _resigned = player;
+        }
+        public bool threeRepititionCheck()
+        {
+            string fen = GetFen();
+            fen = fen.Substring(0, fen.Length - 3);
+            //fenPositions.Add(fen);
+            //foreach (string position in fenPositions)
+            //{
+                int value;
+                if (fenCountMap.TryGetValue(fen, out value))
+                {
+                    fenCountMap[fen]++;
+                }
+                else
+                {
+                    fenCountMap[fen] = 1;
+                }
+            //}
+            foreach (KeyValuePair<string, int> entry in fenCountMap)
+            {
+                //Console.WriteLine("key : " + entry.Key + " value: " + entry.Value);
+                if (entry.Value == 3)
+                {
+                    _drawn = true;
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void printCountMap()
+        {
+            foreach (KeyValuePair<string, int> entry in fenCountMap)
+            {
+                Console.WriteLine("key : " + entry.Key + " value: " + entry.Value);
+            }
+        }
+        public List<string> getFenPositions()
+        {
+            return this.fenPositions;
         }
     }
 }
